@@ -12,30 +12,51 @@ class AddUserScreen extends StatefulWidget {
 class _AddUserScreenState extends State<AddUserScreen> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
   final TextEditingController _professionController = TextEditingController();
+  String? _selectedGender;
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
     _ageController.dispose();
-    _genderController.dispose();
     _professionController.dispose();
+  }
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(12.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        content: Center(child: Text(message)),
+      ),
+    );
   }
 
   void _saveUser() {
     final name = _controller.text.trim();
-    final age = _ageController.text.trim();
-    final gender = _genderController.text.trim();
+    final age = int.tryParse(_ageController.text.trim()) ?? 0;
+    final gender = _selectedGender;
     final profession = _professionController.text.trim();
+
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Center(child: Text("You must enter a name"))),
-      );
+      _showSnackBar('Please enter a name');
       return;
     }
-    final newUser = User(id: const Uuid().v4(), name: name, age: age, gender: gender, professio: profession);
+
+    if(_ageController.text.trim().isEmpty) {
+      _showSnackBar("Please enter an age");
+    }
+
+    if(_selectedGender == null) {
+      _showSnackBar('Please select your gender');
+    }
+
+    if(profession.isEmpty) {
+      _showSnackBar('Please enter your profession');
+    }
+
+    final newUser = User(id: const Uuid().v4(), name: name, age: age, gender: gender!, profession: profession);
     Navigator.pop(context, newUser);
   }
 
@@ -54,6 +75,24 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 labelText: 'Enter user name',
                 border: OutlineInputBorder(),
               ),
+            ),
+            DropdownButtonFormField<String>(
+              initialValue: _selectedGender,
+              decoration: const InputDecoration(
+                labelText: 'Select Gender',
+                border: OutlineInputBorder(),
+              ),
+              items: const [
+                DropdownMenuItem(value: 'Male', child: Text('Male')),
+                DropdownMenuItem(value: 'Female', child: Text('Female')),
+                DropdownMenuItem(value: 'Non-Binary', child: Text('Non-binary')),
+                DropdownMenuItem(value: 'Other', child: Text('Other')),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedGender = value;
+                });
+              },
             ),
             ElevatedButton(
               onPressed: _saveUser,
