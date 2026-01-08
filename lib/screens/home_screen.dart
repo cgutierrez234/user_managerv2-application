@@ -78,6 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           final updatedUser = User(
                             id: users[index].id,
                             name: updatedName,
+                            age: users[index].age,
+                            gender: users[index].gender,
+                            profession: users[index].profession,
                           );
                           await dbHelper.updateUser(updatedUser);
                           await _loadUsers();

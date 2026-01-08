@@ -22,6 +22,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     _ageController.dispose();
     _professionController.dispose();
   }
+
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -44,19 +45,25 @@ class _AddUserScreenState extends State<AddUserScreen> {
       return;
     }
 
-    if(_ageController.text.trim().isEmpty) {
+    if (_ageController.text.trim().isEmpty) {
       _showSnackBar("Please enter an age");
     }
 
-    if(_selectedGender == null) {
+    if (_selectedGender == null) {
       _showSnackBar('Please select your gender');
     }
 
-    if(profession.isEmpty) {
+    if (profession.isEmpty) {
       _showSnackBar('Please enter your profession');
     }
 
-    final newUser = User(id: const Uuid().v4(), name: name, age: age, gender: gender!, profession: profession);
+    final newUser = User(
+      id: const Uuid().v4(),
+      name: name,
+      age: age,
+      gender: gender!,
+      profession: profession,
+    );
     Navigator.pop(context, newUser);
   }
 
@@ -64,7 +71,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Add user'), centerTitle: true),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -72,10 +79,33 @@ class _AddUserScreenState extends State<AddUserScreen> {
             TextField(
               controller: _controller,
               decoration: InputDecoration(
-                labelText: 'Enter user name',
-                border: OutlineInputBorder(),
+                labelText: "Enter user's name",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
+            const SizedBox(height: 12.0),
+            TextField(
+              controller: _ageController,
+              decoration: InputDecoration(
+                labelText: "Enter user's age",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _professionController,
+              decoration: InputDecoration(
+                labelText: "Enter user's profession",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               initialValue: _selectedGender,
               decoration: const InputDecoration(
@@ -85,7 +115,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
               items: const [
                 DropdownMenuItem(value: 'Male', child: Text('Male')),
                 DropdownMenuItem(value: 'Female', child: Text('Female')),
-                DropdownMenuItem(value: 'Non-Binary', child: Text('Non-binary')),
+                DropdownMenuItem(
+                  value: 'Non-Binary',
+                  child: Text('Non-binary'),
+                ),
                 DropdownMenuItem(value: 'Other', child: Text('Other')),
               ],
               onChanged: (value) {
@@ -94,6 +127,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 });
               },
             ),
+            const SizedBox(height: 12.0),
             ElevatedButton(
               onPressed: _saveUser,
               child: const Text('Save User'),
