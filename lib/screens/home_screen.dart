@@ -69,19 +69,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () async {
-                        final updatedName = await Navigator.pushNamed(
+                        final updatedUser = await Navigator.pushNamed(
                           context,
                           '/edit',
                           arguments: user,
                         );
-                        if (updatedName != null && updatedName is String) {
-                          final updatedUser = User(
-                            id: users[index].id,
-                            name: updatedName,
-                            age: users[index].age,
-                            gender: users[index].gender,
-                            profession: users[index].profession,
-                          );
+                        if (updatedUser != null && updatedUser is User) {
                           await dbHelper.updateUser(updatedUser);
                           await _loadUsers();
                         }
