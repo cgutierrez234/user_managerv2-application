@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/services.dart';
 
 class AddUserScreen extends StatefulWidget {
   const AddUserScreen({super.key});
@@ -78,40 +79,31 @@ class _AddUserScreenState extends State<AddUserScreen> {
           children: [
             TextField(
               controller: _controller,
-              decoration: InputDecoration(
-                labelText: "Enter user's name",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+              decoration: const InputDecoration(labelText: "Enter user's name"),
             ),
             const SizedBox(height: 12.0),
             TextField(
               controller: _ageController,
-              decoration: InputDecoration(
-                labelText: "Enter user's age",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: false,
               ),
+              decoration: const InputDecoration(labelText: "Enter user's age"),
+              autocorrect: false,
+              enableSuggestions: false,
+              textCapitalization: TextCapitalization.none,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _professionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Enter user's profession",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
               ),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               initialValue: _selectedGender,
-              decoration: const InputDecoration(
-                labelText: 'Select Gender',
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(labelText: 'Select Gender'),
               items: const [
                 DropdownMenuItem(value: 'Male', child: Text('Male')),
                 DropdownMenuItem(value: 'Female', child: Text('Female')),

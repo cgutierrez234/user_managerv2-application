@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
+import 'package:flutter/services.dart';
 
 class EditUserScreen extends StatefulWidget {
   const EditUserScreen({super.key});
@@ -16,12 +17,13 @@ class _EditUserScreenState extends State<EditUserScreen> {
       TextEditingController();
   String? _editSelectedGender;
 
-  // I only want didChangeDependencies to run once, as to not override updated values with saved values. That's why we use the _isInitialized variable. Check to see if not initialized, then snag the saved user in the 
-  // passedUser variable. Set the local user variable to passedUser and then set all the local controllers to the edit screen to the old values. Set initialized flag to true. Now it won't run again. 
+  // I only want didChangeDependencies to run once, as to not override updated values with saved values. That's why we use the _isInitialized variable. Check to see if not initialized, then snag the saved user in the
+  // passedUser variable. Set the local user variable to passedUser and then set all the local controllers to the edit screen to the old values. Set initialized flag to true. Now it won't run again.
   bool _isInitialized = false;
 
   @override
-  void didChangeDependencies() { // runs once the widget is mounted and context is available
+  void didChangeDependencies() {
+    // runs once the widget is mounted and context is available
     super.didChangeDependencies();
     if (!_isInitialized) {
       final passedUser = ModalRoute.of(context)!.settings.arguments as User;
@@ -88,7 +90,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
       gender: updatedGender!,
       profession: updatedProfession,
     );
-    
+
     Navigator.pop(context, updatedUser);
   }
 
@@ -103,40 +105,38 @@ class _EditUserScreenState extends State<EditUserScreen> {
           children: [
             TextField(
               controller: _editUserNameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Enter updated user name",
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _editAgeController,
-              decoration: InputDecoration(
-                labelText: "Enter updated user age",
-                border: OutlineInputBorder(),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: false,
               ),
+              decoration: const InputDecoration(
+                labelText: "Enter updated user age",
+              ),
+              autocorrect: false,
+              enableSuggestions: false,
+              textCapitalization: TextCapitalization.none,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _editProfessionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Enter updated user profession",
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               initialValue: _editSelectedGender,
-              decoration: InputDecoration(
-                labelText: 'Select Gender',
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color:Colors.deepPurple, width: 2),
-                ),
-              ),
+              decoration: const InputDecoration(labelText: 'Select Gender'),
               dropdownColor: Colors.deepPurple.shade50,
               iconEnabledColor: Colors.deepPurple,
-              style:const TextStyle(color:Colors.black87),
+              style: const TextStyle(color: Colors.black87),
               items: const [
                 DropdownMenuItem(value: 'Male', child: Text('Male')),
                 DropdownMenuItem(value: 'Female', child: Text('Female')),
@@ -150,7 +150,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
                 setState(() {
                   _editSelectedGender = value;
                 });
-              
               },
             ),
             const SizedBox(height: 12),
