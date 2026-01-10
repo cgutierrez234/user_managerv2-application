@@ -7,23 +7,29 @@ class User {
   final String gender;
   final String profession;
 
-  User({required this.id, required this.name, required this.age, required this.gender, required this.profession});
+  User({
+    required this.id,
+    required this.name,
+    required this.age,
+    required this.gender,
+    required this.profession,
+  });
 
-  // Converts an User object to Map to store within SQLite . . . Map<String, dynamic> 
+  // Converts an User object to Map to store within SQLite . . . Map<String, dynamic>
   Map<String, dynamic> toMap() {
     return {
-      'id' : id,
+      'id': id,
       'name': name,
       'age': age,
-      'gender' : gender,
-      'profession' : profession,
+      'gender': gender,
+      'profession': profession,
     };
   }
 
   // Take a database row( in this case a map) and converts it back into a user Object
   // The ‘factory’ keyword lets this constructor run custom logic before returning an object, or even return an existing instance instead of always creating a new one.
   factory User.fromMap(Map<String, dynamic> map) {
-    return User (
+    return User(
       id: map['id'],
       name: map['name'],
       age: map['age'],
