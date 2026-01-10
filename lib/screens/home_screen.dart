@@ -56,50 +56,75 @@ class _HomeScreenState extends State<HomeScreen> {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.person),
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/profile',
-                          arguments: user,
-                        );
-                      },
+                    Tooltip(
+                      message: 'View Profile',
+                      child: IconButton(
+                        icon: const Icon(Icons.person),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/profile',
+                            arguments: user,
+                          );
+                        },
+                      ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () async {
-                        final updatedUser = await Navigator.pushNamed(
-                          context,
-                          '/edit',
-                          arguments: user,
-                        );
-                        if (updatedUser != null && updatedUser is User) {
-                          await dbHelper.updateUser(updatedUser);
+                    Tooltip(
+                      message: 'Edit User',
+                      child: IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () async {
+                          final updatedUser = await Navigator.pushNamed(
+                            context,
+                            '/edit',
+                            arguments: user,
+                          );
+                          if (updatedUser != null && updatedUser is User) {
+                            await dbHelper.updateUser(updatedUser);
+                            await _loadUsers();
+                            if (!mounted) {
+                              return;
+                            }
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                margin: const EdgeInsets.all(12.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                content: Center(
+                                  child: Text("User updated successfully!"),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    Tooltip(
+                      message: 'Delete User',
+                      child: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () async {
+                          await dbHelper.deleteUser(users[index].id);
                           await _loadUsers();
-                        }
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () async {
-                        await dbHelper.deleteUser(users[index].id);
-                        await _loadUsers();
-                        if (!mounted) return;
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            margin: const EdgeInsets.all(12.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          if (!mounted) return;
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.all(12.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              content: Center(
+                                child: Text("User deleted successfully!"),
+                              ),
                             ),
-                            content: Center(
-                              child: Text("User deleted Successfully"),
-                            ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -132,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    content: Center(child: Text('User Successfully Added')),
+                    content: Center(child: Text('User added successfully!')),
                   ),
                 );
               }
