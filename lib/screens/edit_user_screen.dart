@@ -127,10 +127,16 @@ class _EditUserScreenState extends State<EditUserScreen> {
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               initialValue: _editSelectedGender,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Select Gender',
                 border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color:Colors.deepPurple, width: 2),
+                ),
               ),
+              dropdownColor: Colors.deepPurple.shade50,
+              iconEnabledColor: Colors.deepPurple,
+              style:const TextStyle(color:Colors.black87),
               items: const [
                 DropdownMenuItem(value: 'Male', child: Text('Male')),
                 DropdownMenuItem(value: 'Female', child: Text('Female')),
